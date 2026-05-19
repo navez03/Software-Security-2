@@ -115,8 +115,10 @@ def analyse(prog: Stmt, init_env: dict = None):
         # If `e` is Tainted, append an alarm. State is unchanged either way.
         # Alarm shape: ('taint-flow-to-sink', stmt.e, env.copy())
         if isinstance(stmt, Sink):
-            raise NotImplementedError("GAP 3b: handle Sink")
-
+            if taint_expr(stmt.e, env) == "T":
+                alarms.append(('taint-flow-to-sink', stmt.e, env.copy()))
+            return env
+        
         # GAP 3c — If:
         # Run both branches from the SAME entry env (path-insensitive),
         # then join_env the two result envs.
