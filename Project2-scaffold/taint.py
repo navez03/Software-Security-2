@@ -132,7 +132,9 @@ def analyse(prog: Stmt, init_env: dict = None):
         # Run both branches from the SAME entry env (path-insensitive),
         # then join_env the two result envs.
         if isinstance(stmt, If):
-            raise NotImplementedError("GAP 3c: handle If")
+            env_true = step(stmt.t, env)
+            env_false = step(stmt.f, env)
+            return join_env(env_true, env_false)
 
         # GAP 4 — While:
         # Iterate: cur = env; loop:
