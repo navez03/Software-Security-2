@@ -62,9 +62,17 @@ def join_env(e1: dict, e2: dict) -> dict:
     Join two environments. A variable seen in only one environment is treated
     as "U" in the other (it had no taint there).
     """
+    result = {}
+
+    for k in set(e1) | set(e2):
+        result[k] = join(
+            e1.get(k, "U"),
+            e2.get(k, "U")
+        )
+        
+    return result
     # GAP 1b — for every key in e1 ∪ e2, take join of the two values
     # (defaulting to "U" when missing).
-    raise NotImplementedError("GAP 1b: implement join_env")
 
 # ── GAP 2 — expression taint ─────────────────────────────────────────────────
 
