@@ -116,7 +116,7 @@ def analyse(prog: Stmt, init_env: dict = None):
         # GAP 3a — Assign:
         # `x := e` — set env[x] to the taint of e.
         if isinstance(stmt, Assign):
-            raise NotImplementedError("GAP 3a: handle Assign")
+            return {**env, stmt.x: taint_expr(stmt.e, env)}
 
         # GAP 3b — Sink:
         # If `e` is Tainted, append an alarm. State is unchanged either way.
