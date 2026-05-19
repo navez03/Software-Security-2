@@ -72,13 +72,20 @@ def taint_expr(e: Expr, env: dict) -> str:
     A constant is Untainted. A variable's taint comes from env (default "U").
     A compound expression is Tainted iff ANY of its subexpressions is.
     """
+    if isinstance(e, Num):
+        return "U"
+    if isinstance(e, Var):
+        return env.get(e.x, "U")
+    if isinstance(e.sub, Not):
+        return taint_expr(sub, env)
+    if isinstance(e, Bin):
+        return join(taint_expr(e.l, env), taint_expr(e.r, env))
     # GAP 2 — implement for: Num, Var, Not, Bin
     # Hints:
     #   Num         → "U"
     #   Var         → env.get(e.x, "U")
     #   Not(sub)    → taint_expr(sub, env)
     #   Bin(_,l,r)  → join(taint_expr(l, env), taint_expr(r, env))
-    raise NotImplementedError("GAP 2: implement taint_expr")
 
 # ── GAP 3 / 4 — analyser ─────────────────────────────────────────────────────
 
