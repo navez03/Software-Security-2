@@ -52,8 +52,10 @@ from lang import *
 
 def join(a: str, b: str) -> str:
     """Pointwise least-upper-bound on the 2-point lattice."""
+    if a == "T" or b == "T":
+        return "T"
+    return "U"
     # GAP 1a — return "T" if either operand is "T", else "U".
-    raise NotImplementedError("GAP 1a: implement join")
 
 def join_env(e1: dict, e2: dict) -> dict:
     """
@@ -76,8 +78,8 @@ def taint_expr(e: Expr, env: dict) -> str:
         return "U"
     if isinstance(e, Var):
         return env.get(e.x, "U")
-    if isinstance(e.sub, Not):
-        return taint_expr(sub, env)
+    if isinstance(e, Not):
+        return taint_expr(e.sub, env)
     if isinstance(e, Bin):
         return join(taint_expr(e.l, env), taint_expr(e.r, env))
     # GAP 2 — implement for: Num, Var, Not, Bin
