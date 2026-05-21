@@ -156,9 +156,20 @@ def analyse(prog: Stmt, init_env: dict = None):
         # Note: alarms inside the loop body must only be reported once.
         # The simplest way is to deduplicate in `analyse()` after step() returns.
         if isinstance(stmt, While):
-            raise NotImplementedError("GAP 4: handle While (fixpoint)")
+            cur = env
 
-        raise TypeError(f"step: unknown stmt {stmt!r}")
+            while True:
+                # Run one iteration of the loop body
+                body_out = step(stmt.body, cur)
+
+                # Merge previous knowledge with new knowledge
+                nxt = join_env(cur, body_out)
+
+                # Stop once nothing changes
+                if nxt == cur:
+                    break
+                cur = nxt
+            return cur
 
     final_env = step(prog, init_env)
 
